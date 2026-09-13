@@ -1,9 +1,24 @@
 import { characters } from '@/data/characters'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
+import type { Metadata } from 'next'
 
-export default function CharacterPage({ params }: { params: { slug: string } }) {
-  const char = characters.find(c => c.slug === params.slug)
+export async function generateStaticParams() {
+  return characters.map(c => ({ slug: c.slug }))
+}
+
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
+  const { slug } = await params
+  const char = characters.find(c => c.slug === slug)
+  return {
+    title: char ? `${char.name} | Hogwarts Journey` : 'Character Not Found',
+    description: char?.shortBio ?? '',
+  }
+}
+
+export default async function CharacterPage({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params
+  const char = characters.find(c => c.slug === slug)
   if (!char) notFound()
   return (
     <main style={{ paddingTop: '100px', padding: '120px 2rem 4rem', minHeight: '100vh', position: 'relative', zIndex: 1 }}>

@@ -1,9 +1,24 @@
 import { books } from '@/data/books'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
+import type { Metadata } from 'next'
 
-export default function BookPage({ params }: { params: { slug: string } }) {
-  const book = books.find(b => b.slug === params.slug)
+export async function generateStaticParams() {
+  return books.map(b => ({ slug: b.slug }))
+}
+
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
+  const { slug } = await params
+  const book = books.find(b => b.slug === slug)
+  return {
+    title: book ? `${book.title} | Hogwarts Journey` : 'Book Not Found',
+    description: book?.shortSynopsis ?? '',
+  }
+}
+
+export default async function BookPage({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params
+  const book = books.find(b => b.slug === slug)
   if (!book) notFound()
 
   return (
