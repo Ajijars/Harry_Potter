@@ -640,6 +640,9 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   font-family: var(--font-subheading);
   font-size: 0.9rem;
   letter-spacing: 0.2em;
@@ -675,6 +678,9 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   font-family: var(--font-subheading);
   font-size: 0.9rem;
   letter-spacing: 0.2em;
@@ -1928,3 +1934,4 @@ h1, h2, h3, h4, h5, h6 {
   position: relative;
   z-index: 1;
 }
+@keyframes hagridFly { 0% { transform: scale(0) translate(-100vw, -50vh) rotate(15deg); opacity: 0; } 10% { opacity: 1; } 90% { opacity: 1; } 100% { transform: scale(5) translate(100vw, 50vh) rotate(-10deg); opacity: 0; } }
