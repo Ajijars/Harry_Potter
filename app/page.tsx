@@ -2,6 +2,7 @@
 import { useEffect, useRef, useState } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
+import { useRouter } from 'next/navigation'
 import FloatingObjects from '@/components/FloatingObjects'
 import SpellEffect from '@/components/SpellEffect'
 import { books } from '@/data/books'
@@ -151,6 +152,8 @@ const HOUSES = [
 ]
 
 export default function HomePage() {
+  const router = useRouter()
+  const [isJourneyStarted, setIsJourneyStarted] = useState(false)
   const [activeSpell, setActiveSpell] = useState<string | null>(null)
   const [sortingResult, setSortingResult] = useState<string | null>(null)
   const [hoveredBook, setHoveredBook] = useState<number | null>(null)
@@ -184,6 +187,23 @@ export default function HomePage() {
     setSortingResult(house)
   }
 
+  const handleStartJourney = (e: React.MouseEvent) => {
+    e.preventDefault()
+    if (isJourneyStarted) return
+    setIsJourneyStarted(true)
+    
+    // Play music if it's not already playing
+    const audioBtn = document.getElementById('audio-toggle-btn')
+    if (audioBtn && audioBtn.title.includes('Play')) {
+      audioBtn.click()
+    }
+
+    // Wait for the 13 second cinematic animation to finish, then redirect
+    setTimeout(() => {
+      router.push('/books')
+    }, 13000)
+  }
+
   return (
     <main style={{ position: 'relative', zIndex: 1 }}>
 
@@ -192,7 +212,7 @@ export default function HomePage() {
       ═══════════════════════════════════════ */}
       <section className="hero-section" id="hero">
         <div className="hero-bg" />
-        <FloatingObjects />
+        <FloatingObjects isJourneyStarted={isJourneyStarted} />
 
         {/* ── Floating Dialogue Popups ── */}
         <div className="dialogue-popup" style={{ top: '22%', left: '3%', animationDelay: '0s' }} aria-hidden="true">
@@ -220,9 +240,9 @@ export default function HomePage() {
             "I solemnly swear that I am up to no good" — 1991 to 1998, seven years, eight films, one extraordinary legacy.
           </p>
           <div className="hero-cta-group">
-            <Link href="/books" className="btn-primary" id="begin-journey-btn">
-              Begin Your Journey
-            </Link>
+            <a href="/books" onClick={handleStartJourney} className="btn-primary" id="begin-journey-btn">
+              {isJourneyStarted ? 'Hagrid is arriving...' : 'Begin Your Journey'}
+            </a>
             <Link href="/houses" className="btn-secondary" id="find-house-btn">
               Find Your House
             </Link>

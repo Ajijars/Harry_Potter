@@ -320,7 +320,7 @@ const Candle = ({ x, height, delay, duration, opacity }: {
   </div>
 )
 
-export default function FloatingObjects() {
+export default function FloatingObjects({ isJourneyStarted = false }: { isJourneyStarted?: boolean }) {
   const [mounted, setMounted] = useState(false)
   useEffect(() => setMounted(true), [])
   if (!mounted) return null
@@ -529,25 +529,27 @@ export default function FloatingObjects() {
         />
       ))}
 
-      {/* ── Cinematic Hagrid Motorcycle ── */}
-      <div style={{
-        position: 'absolute',
-        top: 0,
-        left: 0,
-        width: '100%',
-        height: '100%',
-        pointerEvents: 'none',
-        zIndex: 10,
-        overflow: 'hidden'
-      }}>
+      {/* ── Cinematic Hagrid Motorcycle (triggered by button click) ── */}
+      {isJourneyStarted && (
         <div style={{
           position: 'absolute',
-          animation: 'hagridFly 12s cubic-bezier(0.25, 0.1, 0.25, 1) forwards',
-          animationDelay: '1s'
+          top: 0,
+          left: 0,
+          width: '100%',
+          height: '100%',
+          pointerEvents: 'none',
+          zIndex: 10,
+          overflow: 'hidden'
         }}>
-          <HagridMotorcycle width={180} />
+          <div style={{
+            position: 'absolute',
+            animation: 'hagridFly 12s cubic-bezier(0.25, 0.1, 0.25, 1) forwards',
+            animationDelay: '0s' // start immediately on click
+          }}>
+            <HagridMotorcycle width={180} />
+          </div>
         </div>
-      </div>
+      )}
     </div>
   )
 }
